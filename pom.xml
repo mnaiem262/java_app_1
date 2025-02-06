@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-    
+
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.5.2</version>
-        <relativePath/> <!-- Lookup parent from repository -->
+        <relativePath/>
     </parent>
 
     <groupId>in.ashokit</groupId>
     <artifactId>38_SB_REST_H2_DB_APP</artifactId>
     <version>0.0.1-RELEASE</version>
+    <packaging>war</packaging> <!-- Change to 'jar' if needed -->
     <name>38_SB_REST_H2_DB_APP</name>
     <description>Demo project for Spring Boot</description>
 
@@ -22,6 +23,8 @@
         <java.version>11</java.version>
         <sonar.host.url>http://192.168.0.118:9000/</sonar.host.url>
         <sonar.login>sqa_916146a66af94c3b0776083b63250304e287bf21</sonar.login>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -33,6 +36,13 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- Support for WAR Deployment -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope> 
         </dependency>
 
         <!-- Development Tools -->
@@ -67,16 +77,37 @@
 
     <build>
         <plugins>
+            <!-- Maven Compiler Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+
+            <!-- Spring Boot Maven Plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Maven WAR Plugin (Required for WAR files) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.2</version>
                 <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
         </plugins>
@@ -85,12 +116,13 @@
     <distributionManagement>
         <snapshotRepository>
             <id>nexus</id>
-            <url>http://192.168.0.118:8081/nexus/content/repositories/sanp/</url>
+            <url>http://192.168.0.118:8081/nexus/content/repositories/snapshots/</url>
         </snapshotRepository>
         <repository>
             <id>nexus</id>
-            <url>http://192.168.0.118:8081/nexus/content/repositories/nexus/</url>
+            <url>http://192.168.0.118:8081/nexus/content/repositories/releases/</url>
         </repository>
     </distributionManagement>
 
 </project>
+
